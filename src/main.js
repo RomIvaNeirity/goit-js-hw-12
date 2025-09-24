@@ -14,7 +14,7 @@ let query;
 const search = document.querySelector('form');
 search.addEventListener('submit', clickSearch);
 
-function clickSearch(event) {
+async function clickSearch(event) {
   event.preventDefault();
   clearGallery();
   query = event.target.elements['search-text'].value.trim();
@@ -29,28 +29,32 @@ function clickSearch(event) {
 
   showLoader();
 
-  getImagesByQuery(query)
-    .then(data => {
+  const data = await getImagesByQuery(query) 
+    try {
       if (!data.hits.length) {
-        hideLoader();
-        iziToast.show({
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
-        });
-        return;
-      }
-      hideLoader();
-      createGallery(data.hits);
-      
-    })
-    .catch(error => {
-      handleAxiosError(error) 
-      })
-    .finally(() => {
-      hideLoader()
-      search.reset();
+    hideLoader();
+    iziToast.show({
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
     });
+    return;
+  }
+  hideLoader();
+  createGallery(data.hits);
 }
+      catch {
+      error => {
+        handleAxiosError(error)
+      }
+    }
+    finally {
+      () => {
+        hideLoader()
+        search.reset();
+      };
+    }
+  }
+
 
 function handleAxiosError(error) {
 let message = '';

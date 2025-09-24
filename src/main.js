@@ -29,44 +29,38 @@ async function clickSearch(event) {
 
   showLoader();
 
-  const data = await getImagesByQuery(query) 
-    try {
-      if (!data.hits.length) {
+  try {
+    const data = await getImagesByQuery(query);
+    if (!data.hits.length) {
+      hideLoader();
+      iziToast.show({
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
+      });
+      return;
+    }
+    createGallery(data.hits);
     hideLoader();
-    iziToast.show({
-      message:
-        'Sorry, there are no images matching your search query. Please try again!',
-    });
-    return;
+  } catch (error) {
+    handleAxiosError(error);
+  } finally {
+    hideLoader();
+    search.reset();
   }
-  hideLoader();
-  createGallery(data.hits);
 }
-      catch {
-      error => {
-        handleAxiosError(error)
-      }
-    }
-    finally {
-      () => {
-        hideLoader()
-        search.reset();
-      };
-    }
-  }
-
 
 function handleAxiosError(error) {
-let message = '';
+  let message = '';
   if (error.response) {
     message = `Server error: ${error.response.status}`;
   } else if (error.request) {
     message = 'No response from server. Please try again later.';
-  } else {message = `Request error: ${error.message}`;
+  } else {
+    message = `Request error: ${error.message}`;
   }
   console.error('Axios error:', error);
-iziToast.show({ message, backgroundColor: 'red' })
-  }
+  iziToast.show({ message, backgroundColor: 'red' });
+}
 
 iziToast.settings({
   position: 'center',

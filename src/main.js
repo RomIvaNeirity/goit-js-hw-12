@@ -39,17 +39,30 @@ function clickSearch(event) {
         });
         return;
       }
+      hideLoader();
       createGallery(data.hits);
-      hideLoader();
+      
     })
-    .catch(message => {
-      iziToast.show({ message, backgroundColor: 'red' });
-      hideLoader();
-    })
+    .catch(error => {
+      handleAxiosError(error) 
+      })
     .finally(() => {
+      hideLoader()
       search.reset();
     });
 }
+
+function handleAxiosError(error) {
+let message = '';
+  if (error.response) {
+    message = `Server error: ${error.response.status}`;
+  } else if (error.request) {
+    message = 'No response from server. Please try again later.';
+  } else {message = `Request error: ${error.message}`;
+  }
+  console.error('Axios error:', error);
+iziToast.show({ message, backgroundColor: 'red' })
+  }
 
 iziToast.settings({
   position: 'center',

@@ -54,7 +54,7 @@ export function clearGallery() {
   gallery.innerHTML = '';
 }
 
-const loader = document.querySelector('span');
+const loader = document.querySelector(".loader");
 
 export function showLoader() {
   loader.style.display = 'block';

@@ -1,4 +1,3 @@
-hideLoader();
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
@@ -46,7 +45,7 @@ async function clickSearch(event) {
     }
 
     createGallery(data.hits);
-    
+
     const totalPages = Math.ceil(data.totalHits / 15);
     if (page >= totalPages) {
       loadBtn.classList.add("load-more-button-hidden");
@@ -75,8 +74,6 @@ async function loadMore() {
     createGallery(data.hits);
       
     loadBtn.classList.add("load-more-button-hidden");
-   /*  hideLoader(); */
-
     const galleryCad = document.querySelector("li");
     const domRect = galleryCad.getBoundingClientRect();
     window.scrollBy({ top: (domRect.height * 2), behavior: "smooth" })
@@ -94,7 +91,6 @@ async function loadMore() {
   } catch (error) {
     handleAxiosError(error);
   } finally {
-    search.reset();
     hideLoader();    
   }
 }

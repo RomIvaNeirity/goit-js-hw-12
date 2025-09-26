@@ -11,7 +11,7 @@ import {
 } from './js/render-functions';
 
 let query;
-let page = 1;
+let page = 1;  
 const search = document.querySelector('form');
 search.addEventListener('submit', clickSearch);
 const loadBtn = document.querySelector(".load-more-button");
@@ -19,9 +19,10 @@ loadBtn.addEventListener("click", loadMore);
 
 async function clickSearch(event) {
   event.preventDefault();
+  page = 1;
   clearGallery();
   loadBtn.classList.add("load-more-button-hidden");
- iziToast.destroy();
+  iziToast.destroy();
   query = event.target.elements['search-text'].value.trim();
   if (query.trim() === '') {
     iziToast.show({
@@ -33,19 +34,18 @@ async function clickSearch(event) {
 
   showLoader();
 
-  try {
+  try { 
     const data = await getImagesByQuery(query, page);
     if (!data.hits.length) {
-      hideLoader();
-      iziToast.show({
+        iziToast.show({
         message:
           'Sorry, there are no images matching your search query. Please try again!',
-      }); loadBtn.classList.add("load-more-button-hidden");
+        });
+      loadBtn.classList.add("load-more-button-hidden");
       return;
     }
-    
+
     createGallery(data.hits);
-    hideLoader();
     
     const totalPages = Math.ceil(data.totalHits / 15);
     if (page >= totalPages) {
@@ -60,8 +60,8 @@ async function clickSearch(event) {
   } catch (error) {
     handleAxiosError(error);
   } finally {
-    hideLoader();
-    search.reset();    
+    search.reset();
+    hideLoader();    
   }
 }
 
@@ -73,8 +73,9 @@ async function loadMore() {
   try {
     const data = await getImagesByQuery(query, page);
     createGallery(data.hits);
+      
     loadBtn.classList.add("load-more-button-hidden");
-    hideLoader();
+   /*  hideLoader(); */
 
     const galleryCad = document.querySelector("li");
     const domRect = galleryCad.getBoundingClientRect();
@@ -93,8 +94,8 @@ async function loadMore() {
   } catch (error) {
     handleAxiosError(error);
   } finally {
-    hideLoader();
-    search.reset();    
+    search.reset();
+    hideLoader();    
   }
 }
 
